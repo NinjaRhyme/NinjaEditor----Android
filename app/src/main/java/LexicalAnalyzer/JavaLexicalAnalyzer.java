@@ -1,5 +1,6 @@
 package LexicalAnalyzer;
 
+import java.util.HashMap;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -31,13 +32,25 @@ public class JavaLexicalAnalyzer {
     }
 
     //----------------------------------------------------------------------------------------------------
-    private static String s_punctuations = "+-*/()[]{}!@#$%^&<>=|:;?~.,\'`\"";
+    private static HashMap<String, Boolean> s_keywords = new HashMap<>();
+    private static HashMap<Character, Boolean> s_punctuations = new HashMap<>();
     private Editable m_editable;
     private String m_data;
     private int m_len;
     private int m_pos;
 
     public JavaLexicalAnalyzer() {
+        if (s_keywords.isEmpty()) {
+            for (TokenEnum token : TokenEnum.values()) {
+                s_keywords.put(token.toString(), true);
+            }
+        }
+        if (s_punctuations.isEmpty()) {
+            String punctuations = "+-*/()[]{}!@#$%^&<>=|:;?~.,\'`\"";
+            for (int i = 0; i < punctuations.length(); ++i) {
+                s_punctuations.put(punctuations.charAt(i), true);
+            }
+        }
     }
 
     public boolean analyze(Editable s) {
@@ -164,13 +177,9 @@ public class JavaLexicalAnalyzer {
         }
 
         // Match word
-        String word = m_data.substring(begin, m_pos);
-        for (TokenEnum token : TokenEnum.values()) {
-            if (word.equals(token.toString())) {
-                // Keyword
-                renderKeyword(begin, m_pos);
-                return true;
-            }
+        if (s_keywords.containsKey(m_data.substring(begin, m_pos))) {
+            renderKeyword(begin, m_pos);
+            return true;
         }
 
         // Identifier
@@ -345,12 +354,7 @@ public class JavaLexicalAnalyzer {
     }
 
     private boolean isPunctuation(char input) {
-        for (int i = 0; i < s_punctuations.length(); ++i) {
-            if (s_punctuations.charAt(i) == input) {
-                return true;
-            }
-        }
-        return false;
+        return s_punctuations.containsKey(input);
     }
 
     private boolean isEnd() {
