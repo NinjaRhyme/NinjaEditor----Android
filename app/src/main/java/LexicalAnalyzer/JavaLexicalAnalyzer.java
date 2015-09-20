@@ -269,6 +269,12 @@ public class JavaLexicalAnalyzer {
                 renderLiteral(begin, m_pos);
                 return true;
 
+            case '{':
+            case '}':
+            case '(':
+            case ')':
+                break;
+
             default:
                 renderPunctuation(begin, m_pos);
                 return true;

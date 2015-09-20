@@ -25,6 +25,8 @@ public class NinjaEditor extends EditText {
     }
 
     private void initialize() {
+        setHorizontallyScrolling(true);
+
         m_javaLexicalAnalyzer = new JavaLexicalAnalyzer();
         this.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
