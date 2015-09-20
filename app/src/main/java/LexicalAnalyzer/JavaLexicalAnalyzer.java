@@ -270,11 +270,12 @@ public class JavaLexicalAnalyzer {
                 return true;
 
             default:
-                break;
+                renderPunctuation(begin, m_pos);
+                return true;
         }
 
         // Punctuation
-        renderPunctuation(begin, m_pos);
+        renderOperator(begin, m_pos);
         return true;
     }
 
@@ -324,22 +325,26 @@ public class JavaLexicalAnalyzer {
     // Render
     //----------------------------------------------------------------------------------------------------
     private void renderNumber(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(Color.BLUE), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(0xFF6897BB), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderKeyword(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(Color.MAGENTA), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(0xFFCC7832), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderIdentifier(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(Color.CYAN), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(0xFFD0D0FF), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderLiteral(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(Color.BLACK), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(0xFF6A8759), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    private void renderOperator(int begin, int end) {
+        m_editable.setSpan(new ForegroundColorSpan(0xFFD0D0FF), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderPunctuation(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(Color.DKGRAY), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(0xFFCC7832), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 }
