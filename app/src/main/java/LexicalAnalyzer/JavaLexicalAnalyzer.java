@@ -1,12 +1,8 @@
 package LexicalAnalyzer;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.Spanned;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 
 public class JavaLexicalAnalyzer {
     //----------------------------------------------------------------------------------------------------
@@ -72,8 +68,40 @@ public class JavaLexicalAnalyzer {
             ++m_pos;
         }
 
-        // deal with the comment
+        // Deal with comment
+        int begin = m_pos;
 
+        if (m_data.charAt(m_pos) == '/') {
+            if (m_data.charAt(m_pos + 1) == '/') {
+                m_pos += 2;
+                while (m_data.charAt(m_pos) != '\n' && !isEnd()) {
+                    ++m_pos;
+                }
+                if (m_data.charAt(m_pos) == '\n') {
+                    ++m_pos;
+                }
+                handleNonsense();
+            } else if (m_data.charAt(m_pos + 1) == '*') {
+                m_pos += 2;
+                while(!isEnd()) {
+                    if (m_data.charAt(m_pos) == '*') {
+                        ++m_pos;
+                        if (m_data.charAt(m_pos) == '/') {
+                            ++m_pos;
+                            break;
+                        } else if (isEnd()) {
+                            break;
+                        }
+                    }
+                    ++m_pos;
+                }
+                handleNonsense();
+            }
+        }
+
+        if (begin != m_pos) {
+            renderComment(begin, m_pos);
+        }
         return true;
     }
 
@@ -232,7 +260,7 @@ public class JavaLexicalAnalyzer {
                 break;
 
             case '\'':
-                while (m_data.charAt(m_pos) != '\'' && m_data.charAt(m_pos) != '\0') {
+                while (m_data.charAt(m_pos) != '\'' && !isEnd()) {
                     if (m_data.charAt(m_pos) == '\\') {
                         ++m_pos;
                         if (m_data.charAt(m_pos) == '\'' || m_data.charAt(m_pos) == '\\') {
@@ -251,7 +279,7 @@ public class JavaLexicalAnalyzer {
                 return true;
 
             case '"':
-                while (m_data.charAt(m_pos) != '"' && m_data.charAt(m_pos) != '\0') {
+                while (m_data.charAt(m_pos) != '"' && !isEnd()) {
                     if (m_data.charAt(m_pos) == '\\') {
                         ++m_pos;
                         if (m_data.charAt(m_pos) == '"' || m_data.charAt(m_pos) == '\\') {
@@ -269,6 +297,7 @@ public class JavaLexicalAnalyzer {
                 renderLiteral(begin, m_pos);
                 return true;
 
+            case '.':
             case '{':
             case '}':
             case '(':
@@ -352,5 +381,9 @@ public class JavaLexicalAnalyzer {
 
     private void renderPunctuation(int begin, int end) {
         m_editable.setSpan(new ForegroundColorSpan(0xFFCC7832), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    private void renderComment(int begin, int end) {
+        m_editable.setSpan(new ForegroundColorSpan(0xFF808080), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 }
