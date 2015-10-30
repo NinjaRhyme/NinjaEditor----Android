@@ -71,6 +71,26 @@
             android:layout_height="wrap_content"
             android:max="255" />
 
+        <LinearLayout style="?android:buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button style="?android:buttonBarButtonStyle"
+                android:id="@+id/cancel_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+
+            <Button style="?android:buttonBarButtonStyle"
+                android:id="@+id/ok_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ok" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

@@ -13,4 +13,7 @@
     <string name="value_red">Red: %d\%</string>
     <string name="value_green">Green: %d\%</string>
     <string name="value_blue">Blue: %d\%</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>

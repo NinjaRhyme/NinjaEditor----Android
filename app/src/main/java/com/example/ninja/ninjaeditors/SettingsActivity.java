@@ -1,7 +1,6 @@
 package com.example.ninja.ninjaeditors;
 
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,7 +27,10 @@ public class SettingsActivity extends AppCompatActivity {
             new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    updateImage(getColor());
+                    String item = m_itemSpinner.getSelectedItem().toString();
+                    if (m_colors.containsKey(item)) {
+                        setColorProgress(m_colors.getInt(item));
+                    }
                 }
 
                 @Override
@@ -49,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
             new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    updateImage(getColor());
+                    updateData();
                 }
 
                 @Override
@@ -113,23 +115,33 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     //----------------------------------------------------------------------------------------------------
-    public int getColor() {
+    public void setColorProgress(int color) {
+        m_alphaBar.setProgress(Color.alpha(color));
+        m_redBar.setProgress(Color.red(color));
+        m_greenBar.setProgress(Color.green(color));
+        m_blueBar.setProgress(Color.blue(color));
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    public void updateData() {
         final int alpha = m_alphaBar.getProgress();
         final int red = m_redBar.getProgress();
         final int green = m_greenBar.getProgress();
         final int blue = m_blueBar.getProgress();
+        int color = Color.argb(alpha, red, green, blue);
 
-        return Color.argb(alpha, red, green, blue);
-    }
+        String item = m_itemSpinner.getSelectedItem().toString();
+        if (m_colors.containsKey(item)) {
+            // todo: need a backup
+            m_colors.putInt(item, color);
+        }
 
-    //----------------------------------------------------------------------------------------------------
-    public void updateImage(int color) {
         m_colorSurface.setBackgroundColor(color);
 
         // Update the text for each label with the value of each channel
-        m_alphaText.setText(getString(R.string.value_alpha, Color.alpha(color)));
-        m_redText.setText(getString(R.string.value_red, Color.red(color)));
-        m_greenText.setText(getString(R.string.value_green, Color.green(color)));
-        m_blueText.setText(getString(R.string.value_blue, Color.blue(color)));
+        m_alphaText.setText(getString(R.string.value_alpha, alpha));
+        m_redText.setText(getString(R.string.value_red, red));
+        m_greenText.setText(getString(R.string.value_green, green));
+        m_blueText.setText(getString(R.string.value_blue, blue));
     }
 }
