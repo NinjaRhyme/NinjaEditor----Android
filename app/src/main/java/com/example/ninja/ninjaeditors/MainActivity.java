@@ -109,8 +109,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case SETTINGS_ACTIVITY_CODE:
-                NinjaEditor editor = (NinjaEditor)findViewById(R.id.NinjaEditor);
-                editor.setColors(data.getExtras());
+                if (resultCode == RESULT_OK) {
+                    NinjaEditor editor = (NinjaEditor) findViewById(R.id.NinjaEditor);
+                    editor.setColors(data.getExtras());
+                }
                 break;
             default:
                 break;

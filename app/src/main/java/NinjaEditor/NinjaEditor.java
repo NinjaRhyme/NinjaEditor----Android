@@ -56,6 +56,7 @@ public class NinjaEditor extends EditText {
     //----------------------------------------------------------------------------------------------------
     public boolean setColors(Bundle colors) {
         m_javaCodeAnalyzer.setColors(colors);
+        m_javaCodeAnalyzer.analyze();
 
         return true;
     }

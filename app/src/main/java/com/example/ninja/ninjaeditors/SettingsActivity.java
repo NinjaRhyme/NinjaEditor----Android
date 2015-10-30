@@ -1,5 +1,6 @@
 package com.example.ninja.ninjaeditors;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -93,6 +95,24 @@ public class SettingsActivity extends AppCompatActivity {
         m_blueText = (TextView)findViewById(R.id.blueText);
         m_blueBar = (SeekBar)findViewById(R.id.blueSeek);
         m_blueBar.setOnSeekBarChangeListener(m_seekBarListener);
+
+        // button
+        Button cancelButton = (Button)findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED, null);
+                finish();
+            }
+        });
+        Button okButton = (Button)findViewById(R.id.ok_button);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent result = new Intent(SettingsActivity.this, MainActivity.class);
+                result.putExtras(m_colors);
+                setResult(RESULT_OK, result);
+                finish();
+            }
+        });
     }
 
     //----------------------------------------------------------------------------------------------------

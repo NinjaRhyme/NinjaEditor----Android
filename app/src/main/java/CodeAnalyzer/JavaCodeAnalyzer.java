@@ -84,7 +84,7 @@ public class JavaCodeAnalyzer {
     public boolean analyze(Editable s) {
         m_editable = s;
         m_data = m_editable.toString() + '\0';
-        m_len = s.length();
+        m_len = m_editable.length();
         m_pos = 0;
 
         while (!isEnd()) {
@@ -100,6 +100,30 @@ public class JavaCodeAnalyzer {
         }
 
         return true;
+    }
+
+    public boolean analyze() {
+        if (m_editable != null) {
+            m_data = m_editable.toString() + '\0';
+            m_len = m_editable.length();
+            m_pos = 0;
+
+            while (!isEnd()) {
+                if (!handleNonsense()) {
+                    return true;
+                } else if (isDecimalNumber(m_data.charAt(m_pos))) {
+                    handleNumber();
+                } else if (isLetterOrUnderline(m_data.charAt(m_pos))) {
+                    handleKeywordOrIdentifier();
+                } else if (isPunctuation(m_data.charAt(m_pos))) {
+                    handlePunctuation();
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     //----------------------------------------------------------------------------------------------------
