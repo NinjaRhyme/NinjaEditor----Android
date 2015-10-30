@@ -4,9 +4,9 @@
     tools:context=".MainActivity">
 
     <NinjaEditor.NinjaEditor
+        android:id="@+id/NinjaEditor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/NinjaEditor"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"

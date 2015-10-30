@@ -1,11 +1,16 @@
 <resources>
     <string name="app_name">NinjaEditors</string>
 
+    <!-- menu -->
     <string name="action_demo">Demo Code</string>
     <string name="action_load">Load Code</string>
     <string name="action_save">Save Code</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="hello_world">Hello world!</string>
+    <!-- settings -->
+    <string name="value_alpha">Alpha: %d\%</string>
+    <string name="value_red">Red: %d\%</string>
+    <string name="value_green">Green: %d\%</string>
+    <string name="value_blue">Blue: %d\%</string>
 </resources>

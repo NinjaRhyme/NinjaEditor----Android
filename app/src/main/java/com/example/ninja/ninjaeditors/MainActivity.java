@@ -93,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         } else if (id == R.id.action_settings) {
+            NinjaEditor editor = (NinjaEditor)findViewById(R.id.NinjaEditor);
             Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
+            settings.putExtras(editor.getColors());
             startActivityForResult(settings, SETTINGS_ACTIVITY_CODE);
 
             return true;
@@ -107,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case SETTINGS_ACTIVITY_CODE:
-                Bundle b = data.getExtras();
+                NinjaEditor editor = (NinjaEditor)findViewById(R.id.NinjaEditor);
+                editor.setColors(data.getExtras());
                 break;
             default:
                 break;
