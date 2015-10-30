@@ -1,0 +1,32 @@
+package LexicalAnalyzer;
+
+import java.util.HashMap;
+public class JavaLexicalAnalyzer {
+    //----------------------------------------------------------------------------------------------------
+    public enum TokenEnum {
+        ABSTRACT("abstract"), ASSERT("assert"), BOOLEAN("boolean"), BREAK("break"), BYTE("byte"),
+        CASE("case"), CATCH("catch"), CHAR("char"), CLASS("class"), CONST("const");
+
+        private String name;
+
+        TokenEnum(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    private static HashMap<String, Boolean> s_keywords = new HashMap<>();
+    private int a = 123;
+    private int b = 0123;
+    private int c = 0x123ab;
+    private float d = 123.f;
+    private double e = 0.555;
+    public String f = "hello";
+    public char g = 'a';
+    /* xixixi */
+}

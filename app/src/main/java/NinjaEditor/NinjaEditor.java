@@ -6,11 +6,15 @@ import android.util.AttributeSet;
 import android.text.TextWatcher;
 import android.text.Editable;
 
-import LexicalAnalyzer.JavaLexicalAnalyzer;
+import CodeAnalyzer.JavaCodeAnalyzer;
+
 
 public class NinjaEditor extends EditText {
-    private JavaLexicalAnalyzer m_javaLexicalAnalyzer;
 
+    //----------------------------------------------------------------------------------------------------
+    private JavaCodeAnalyzer m_javaCodeAnalyzer;
+
+    //----------------------------------------------------------------------------------------------------
     public NinjaEditor(Context context) {
         super(context);
         initialize();
@@ -24,10 +28,11 @@ public class NinjaEditor extends EditText {
         initialize();
     }
 
+    //----------------------------------------------------------------------------------------------------
     private void initialize() {
         setHorizontallyScrolling(true);
 
-        m_javaLexicalAnalyzer = new JavaLexicalAnalyzer();
+        m_javaCodeAnalyzer = new JavaCodeAnalyzer();
         this.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -36,7 +41,7 @@ public class NinjaEditor extends EditText {
 
             }
             public void afterTextChanged(Editable s) {
-                m_javaLexicalAnalyzer.analyze(s);
+                m_javaCodeAnalyzer.analyze(s);
             }
         });
     }

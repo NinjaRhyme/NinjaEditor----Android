@@ -1,11 +1,16 @@
-package LexicalAnalyzer;
+package CodeAnalyzer;
 
 import java.util.HashMap;
+import java.util.Set;
+
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 
-public class JavaLexicalAnalyzer {
+
+public class JavaCodeAnalyzer {
+
     //----------------------------------------------------------------------------------------------------
     public enum TokenEnum {
         ABSTRACT("abstract"), ASSERT("assert"), BOOLEAN("boolean"), BREAK("break"), BYTE("byte"),
@@ -32,14 +37,27 @@ public class JavaLexicalAnalyzer {
     }
 
     //----------------------------------------------------------------------------------------------------
-    private static HashMap<String, Boolean> s_keywords = new HashMap<>();
-    private static HashMap<Character, Boolean> s_punctuations = new HashMap<>();
+    // Lexical Analysis
+    static private HashMap<String, Boolean> s_keywords = new HashMap<>();
+    static private HashMap<Character, Boolean> s_punctuations = new HashMap<>();
+    // Syntax Analysis
+    // int m_state = 0;
+    // private HashMap<String, Boolean> m_functions = new HashMap<>();
+    // private HashMap<String, Boolean> m_identifiers = new HashMap<>();
+    // Code Data
     private Editable m_editable;
     private String m_data;
     private int m_len;
     private int m_pos;
+    private HashMap<String, Integer> m_colors = new HashMap<>();
 
-    public JavaLexicalAnalyzer() {
+    //----------------------------------------------------------------------------------------------------
+    public JavaCodeAnalyzer() {
+        initialize();
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    private void initialize() {
         if (s_keywords.isEmpty()) {
             for (TokenEnum token : TokenEnum.values()) {
                 s_keywords.put(token.toString(), true);
@@ -51,8 +69,18 @@ public class JavaLexicalAnalyzer {
                 s_punctuations.put(punctuations.charAt(i), true);
             }
         }
+
+        m_colors.put("numberColor", 0xFF6897BB);
+        m_colors.put("keywordColor", 0xFFCC7832);
+        m_colors.put("identifierColor", 0xFFD0D0FF);
+        m_colors.put("literalColor", 0xFF6A8759);
+        m_colors.put("operatorColor", 0xFFD0D0FF);
+        m_colors.put("punctuationColor", 0xFFCC7832);
+        m_colors.put("commentColor", 0xFF808080);
+        m_colors.put("annotationColor", 0xFFBBB529);
     }
 
+    //----------------------------------------------------------------------------------------------------
     public boolean analyze(Editable s) {
         m_editable = s;
         m_data = m_editable.toString() + '\0';
@@ -72,6 +100,26 @@ public class JavaLexicalAnalyzer {
         }
 
         return true;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    public boolean setColors(Bundle colors) {
+        Set<String> keySet = colors.keySet();
+        for (String key : keySet) {
+            m_colors.put(key, colors.getInt(key));
+        }
+
+        return true;
+    }
+
+    public Bundle getColors() {
+        Bundle colors = new Bundle();
+        Set<String> keySet = m_colors.keySet();
+        for (String key : keySet) {
+            colors.putInt(key, m_colors.get(key));
+        }
+
+        return colors;
     }
 
     // handlers
@@ -228,7 +276,17 @@ public class JavaLexicalAnalyzer {
                 break;
 
             case '@':
-                break;
+                if (!handleNonsense()) {
+                    return true;
+                }
+                while (isLetterOrUnderline(m_data.charAt(m_pos)))  {
+                    ++m_pos;
+                }
+                while (isLetterOrNumberOrUnderline(m_data.charAt(m_pos))) {
+                    ++m_pos;
+                }
+                renderAnnotation(begin, m_pos);
+                return true;
 
             case '&':
                 // "&&" "&="
@@ -364,30 +422,34 @@ public class JavaLexicalAnalyzer {
     // Render
     //----------------------------------------------------------------------------------------------------
     private void renderNumber(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(0xFF6897BB), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(m_colors.get("numberColor")), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderKeyword(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(0xFFCC7832), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(m_colors.get("keywordColor")), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderIdentifier(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(0xFFD0D0FF), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(m_colors.get("identifierColor")), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderLiteral(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(0xFF6A8759), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(m_colors.get("literalColor")), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderOperator(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(0xFFD0D0FF), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(m_colors.get("operatorColor")), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderPunctuation(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(0xFFCC7832), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(m_colors.get("punctuationColor")), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void renderComment(int begin, int end) {
-        m_editable.setSpan(new ForegroundColorSpan(0xFF808080), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        m_editable.setSpan(new ForegroundColorSpan(m_colors.get("commentColor")), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    private void renderAnnotation(int begin, int end) {
+        m_editable.setSpan(new ForegroundColorSpan(m_colors.get("annotationColor")), begin, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 }
